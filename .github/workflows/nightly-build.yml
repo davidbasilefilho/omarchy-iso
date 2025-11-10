@@ -22,8 +22,10 @@ jobs:
 
       - name: Checkout repository
         uses: actions/checkout@v4
-        with:
-          submodules: recursive
+
+      - name: Initialize submodules
+        run: |
+          git submodule update --init --recursive
 
       - name: Create output directory
         run: mkdir -p /out
