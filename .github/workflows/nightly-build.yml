@@ -5,6 +5,10 @@ on:
     branches:
       - main
       - master
+  pull_request:
+    branches:
+      - main
+      - master
   workflow_dispatch: # Allow manual triggering
 
 jobs:
@@ -33,9 +37,9 @@ jobs:
 
       - name: Set up build paths
         run: |
-          ln -s /github/workspace/archiso /archiso
-          ln -s /github/workspace/configs /configs
-          ln -s /github/workspace/builder /builder
+          ln -s $GITHUB_WORKSPACE/archiso /archiso
+          ln -s $GITHUB_WORKSPACE/configs /configs
+          ln -s $GITHUB_WORKSPACE/builder /builder
 
       - name: Build ISO
         run: |
