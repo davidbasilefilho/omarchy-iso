@@ -17,11 +17,14 @@ jobs:
 
     container:
       image: archlinux/archlinux:latest
-      options: --privileged
+      options: --privileged --ulimit nofile=65536:65536 --ulimit nproc=8192:8192
 
     steps:
       - name: Install Git (needed for actions/checkout with submodules)
         run: |
+          # Configure DNS to avoid resolution failures
+          echo "nameserver 8.8.8.8" > /etc/resolv.conf
+          echo "nameserver 8.8.4.4" >> /etc/resolv.conf
           pacman -Sy --noconfirm archlinux-keyring git pcre2
           git config --global --add safe.directory /__w/omarchy-iso/omarchy-iso
 
