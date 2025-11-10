@@ -15,24 +15,7 @@ jobs:
   build-iso:
     runs-on: ubuntu-latest
 
-    container:
-      image: archlinux/archlinux:latest
-      options: --privileged --ulimit nofile=65536:65536 --ulimit nproc=8192:8192
-
     steps:
-      - name: Install Git and Docker (needed for actions/checkout and bin/omarchy-iso-make)
-        run: |
-          # Configure DNS to avoid resolution failures
-          echo "nameserver 8.8.8.8" > /etc/resolv.conf
-          echo "nameserver 8.8.4.4" >> /etc/resolv.conf
-          pacman -Sy --noconfirm archlinux-keyring git pcre2 docker
-          git config --global --add safe.directory /__w/omarchy-iso/omarchy-iso
-
-      - name: Start Docker daemon
-        run: |
-          dockerd &
-          sleep 5
-
       - name: Checkout repository
         uses: actions/checkout@v4
         with:
