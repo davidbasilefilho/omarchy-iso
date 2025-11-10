@@ -31,6 +31,11 @@ jobs:
               pacman -Syu --noconfirm git && \
               git config --global --add safe.directory /workspace && \
               git submodule update --init --recursive && \
+              ln -s /workspace/configs /configs && \
+              ln -s /workspace/builder /builder && \
+              ln -s /workspace/archiso /archiso && \
+              mkdir -p /workspace/out && \
+              ln -s /workspace/out /out && \
               chmod +x builder/build-iso.sh && \
               ./builder/build-iso.sh
             "
