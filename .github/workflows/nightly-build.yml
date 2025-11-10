@@ -11,33 +11,42 @@ jobs:
   build-iso:
     runs-on: ubuntu-latest
 
+    container:
+      image: archlinux/archlinux:latest
+      options: --privileged
+
     steps:
+      - name: Install Git (needed for actions/checkout with submodules)
+        run: |
+          pacman -Sy --noconfirm archlinux-keyring git
+
       - name: Checkout repository
         uses: actions/checkout@v4
-        with:
-          submodules: recursive
 
-      - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v3
-
-      - name: Build ISO in Arch Linux container
+      - name: Initialize submodules
         run: |
-          docker run --rm \
-            --privileged \
-            -v "${{ github.workspace }}:/workspace" \
-            -w /workspace \
-            archlinux:latest \
-            bash -c "
-              pacman -Syu --noconfirm git && \
-              git config --global --add safe.directory /workspace && \
-              git submodule update --init --recursive && \
-              chmod +x builder/build-iso.sh && \
-              ./builder/build-iso.sh
-            "
+          git submodule update --init --recursive
+
+      - name: Create output directory
+        run: mkdir -p /out
+
+      - name: Set up build paths
+        run: |
+          ln -s /github/workspace/archiso /archiso
+          ln -s /github/workspace/configs /configs
+          ln -s /github/workspace/builder /builder
+
+      - name: Build ISO
+        run: |
+          chmod +x /builder/build-iso.sh
+          /builder/build-iso.sh
+        env:
+          OMARCHY_INSTALLER_REPO: davidbasilefilho/omarchy
+          OMARCHY_INSTALLER_REF: master
 
       - name: Upload ISO artifact
         uses: actions/upload-artifact@v4
         with:
           name: omarchy-iso-${{ github.run_number }}
-          path: out/*.iso
+          path: /out/*.iso
           retention-days: 30
