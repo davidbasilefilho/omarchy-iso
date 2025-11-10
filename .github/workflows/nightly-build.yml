@@ -23,8 +23,8 @@ jobs:
 
       - name: Build ISO
         run: |
-          chmod +x bin/omarchy-iso-make
-          bin/omarchy-iso-make --no-boot-offer
+          chmod +x ./bin/omarchy-iso-make
+          ./bin/omarchy-iso-make --no-boot-offer
         env:
           OMARCHY_INSTALLER_REPO: davidbasilefilho/omarchy
           OMARCHY_INSTALLER_REF: master
