@@ -18,7 +18,8 @@ jobs:
     steps:
       - name: Install Git (needed for actions/checkout with submodules)
         run: |
-          pacman -Sy --noconfirm archlinux-keyring git
+          pacman -Sy --noconfirm archlinux-keyring git pcre2
+          git config --global --add safe.directory /__w/omarchy-iso/omarchy-iso
 
       - name: Checkout repository
         uses: actions/checkout@v4
